@@ -1,35 +1,63 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <h1 class="text-center">Blog Posts</h1>
-        </div>
-        <div class="row">
-            <input v-model="query" @input="search" placeholder="Search...">
-            <ul>
-                <li v-for="post in posts" :key="post.id">{{ post.title }}</li>
-            </ul>
-        </div>
-        <div v-for="post in posts" :key="post.id">
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.body }}</p>
-        </div>
+    <div>
+        <h1>My Blog</h1>
+        <search-bar @search="performSearch"></search-bar>
+        <post-list :posts="posts"></post-list>
     </div>
 </template>
 
 <script>
+import SearchBar from './SearchBar.vue';
+import PostList from './PostList.vue';
+import axios from 'axios';
+
 export default {
+    name: 'Blog',
+    components: {
+        SearchBar,
+        PostList
+    },
     data() {
         return {
-            query: '',
             posts: []
         };
     },
     methods: {
-        search() {
-            axios.get(`/api/v1/posts?query=${this.query}`).then(response => {
+        async performSearch(query) {
+            try {
+                const response = await axios.get(`/api/v1/posts/search?q=${query}`);
                 this.posts = response.data;
-            });
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
+        },
+        async fetchPosts() {
+            try {
+                const response = await axios.get('/api/v1/posts');
+                this.posts = response.data;
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+            }
         }
+    },
+    mounted() {
+        console.log('Blog component mounted.');
+        this.fetchPosts();
     }
 };
 </script>
+
+
+<style>
+    #app {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+</style>

@@ -17,8 +17,11 @@ class SphinxServiceProvider extends ServiceProvider
         $this->app->singleton('sphinx', function () {
             $conn = new Connection();
             $conn->setParams([
-                'host' => env('SPHINX_HOST'),
-                'port' => env('SPHINX_PORT'),
+                'host' => env('SPHINX_HOST', '127.0.0.1'),
+                'port' => env('SPHINX_PORT', 9306),
+                'database' => env('SPHINX_DATABASE', 'hai_blog'),
+                'username' => env('SPHINX_USERNAME', 'root'),
+                'password' => env('SPHINX_PASSWORD', '')
             ]);
             return new SphinxQL($conn);
         });

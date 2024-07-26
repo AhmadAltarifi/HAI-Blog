@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'driver' => env('SCOUT_DRIVER', 'sphinx'),
+    'driver' => env('SCOUT_DRIVER', 'sphinxsearch'),
 
     'sphinx' => [
         'hosts' => [
